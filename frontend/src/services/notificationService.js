@@ -6,6 +6,8 @@ class BrowserNotificationService {
     this._checkInterval = null;
     this._reminders = [];
     this._firedSet = new Set();
+    this._isChecking = false;
+    this._onAlarm = null;
   }
 
   get isSupported() {
@@ -65,11 +67,16 @@ class BrowserNotificationService {
     this._reminders = reminders;
   }
 
-  startChecking(reminders, onAlarm) {
-    this.stopChecking();
-    this._reminders = reminders;
-    this._onAlarm = onAlarm;
+  setOnAlarm(callback) {
+    this._onAlarm = callback;
+  }
 
+  startChecking(reminders, onAlarm) {
+    this._reminders = reminders;
+    if (onAlarm) this._onAlarm = onAlarm;
+    if (this._isChecking) return;
+
+    this._isChecking = true;
     this._checkInterval = setInterval(() => {
       this._checkReminders();
     }, 30000);
@@ -82,6 +89,7 @@ class BrowserNotificationService {
       clearInterval(this._checkInterval);
       this._checkInterval = null;
     }
+    this._isChecking = false;
   }
 
   _checkReminders() {

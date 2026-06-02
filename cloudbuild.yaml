@@ -132,6 +132,10 @@ steps:
       - '-c'
       - |
         npm ci &&
+        AUTH_URL=$(gcloud run services describe ${_AUTH_SERVICE_NAME} --region=${_REGION} --format='value(status.url)') &&
+        MED_URL=$(gcloud run services describe ${_MED_SERVICE_NAME} --region=${_REGION} --format='value(status.url)') &&
+        export VITE_AUTH_SERVICE_URL=${AUTH_URL}/api/auth &&
+        export VITE_MEDICATION_SERVICE_URL=${MED_URL}/api &&
         npm run build &&
         gcloud app deploy app.yaml --quiet --project=$PROJECT_ID
 

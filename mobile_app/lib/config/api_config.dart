@@ -2,12 +2,18 @@
 import 'package:flutter/foundation.dart';
 
 class ApiConfig {
-  // Untuk Android Emulator, gunakan 10.0.2.2 sebagai pengganti localhost
-  // Untuk device fisik, ganti dengan IP komputer Anda (misal: 192.168.x.x)
-  static const String _baseHost = kIsWeb ? 'localhost' : '127.0.0.1';
+  // Override via build flag: --dart-define=API_HOST=192.168.x.x
+  static const String _envHost = String.fromEnvironment('API_HOST', defaultValue: '');
 
-  static const String authBaseUrl = 'http://$_baseHost:8001/api/auth';
-  static const String medBaseUrl = 'http://$_baseHost:8002/api';
+  static String get _baseHost {
+    if (_envHost.isNotEmpty) return _envHost;
+    if (kIsWeb) return 'localhost';
+    if (defaultTargetPlatform == TargetPlatform.android) return '10.0.2.2';
+    return '127.0.0.1';
+  }
+
+  static String get authBaseUrl => 'http://$_baseHost:8001/api/auth';
+  static String get medBaseUrl => 'http://$_baseHost:8002/api';
 
   static const Duration timeout = Duration(seconds: 15);
 

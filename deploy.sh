@@ -75,7 +75,7 @@ gcloud run deploy "$AUTH_SERVICE" \
   --cpu=1 \
   --min-instances=0 \
   --max-instances=10 \
-  --set-env-vars="NODE_ENV=production,PORT=8001" \
+  --set-env-vars="NODE_ENV=production" \
   --project="$PROJECT_ID"
 
 AUTH_URL=$(gcloud run services describe "$AUTH_SERVICE" \
@@ -95,7 +95,6 @@ gcloud run deploy "$MED_SERVICE" \
   --cpu=1 \
   --min-instances=0 \
   --max-instances=10 \
-  --set-env-vars="PORT=8002" \
   --project="$PROJECT_ID"
 
 MED_URL=$(gcloud run services describe "$MED_SERVICE" \

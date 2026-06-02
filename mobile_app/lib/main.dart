@@ -16,6 +16,7 @@ import 'screens/reminders_screen.dart';
 import 'screens/logs_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/alarm_screen.dart';
+import 'services/push_notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,7 @@ void main() async {
   // Inisialisasi Notifikasi (Hanya untuk Mobile)
   if (!kIsWeb) {
     await NotificationService.initialize();
+    await PushNotificationService.initialize();
   }
 
   // Status bar style

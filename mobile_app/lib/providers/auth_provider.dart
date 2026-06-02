@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
+import '../services/notification_service.dart';
+import '../services/reminder_scheduler.dart';
+import '../services/push_notification_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -31,6 +34,8 @@ class AuthProvider extends ChangeNotifier {
 
       if (_token != null && _user != null) {
         _isAuthenticated = true;
+        await ReminderScheduler.syncAll();
+        await PushNotificationService.registerToken();
       }
     } catch (_) {}
 
@@ -47,6 +52,8 @@ class AuthProvider extends ChangeNotifier {
       _token = result['token'] as String;
       _isAuthenticated = true;
       notifyListeners();
+      await ReminderScheduler.syncAll();
+      await PushNotificationService.registerToken();
     }
 
     return result;
@@ -70,6 +77,7 @@ class AuthProvider extends ChangeNotifier {
   /// Logout
   Future<void> logout() async {
     await _authService.logout();
+    await NotificationService.cancelAll();
     _user = null;
     _token = null;
     _isAuthenticated = false;

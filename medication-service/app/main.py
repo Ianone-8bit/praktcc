@@ -9,7 +9,8 @@ load_dotenv()
 
 from app.services.db import engine, Base
 from app.models import Patient, Medication, Prescription, Reminder, MedicationLog
-from app.routers import patients, medications, prescriptions, reminders, logs, dashboard
+from app.routers import patients, medications, prescriptions, reminders, logs, dashboard, notifications
+from app.services.notification_scheduler import start_scheduler
 
 # Create all tables
 Base.metadata.create_all(bind=engine)
@@ -58,6 +59,12 @@ app.include_router(prescriptions.router, prefix="/api")
 app.include_router(reminders.router, prefix="/api")
 app.include_router(logs.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
+app.include_router(notifications.router, prefix="/api")
+
+
+@app.on_event("startup")
+async def startup_events():
+    start_scheduler()
 
 
 @app.get("/health")

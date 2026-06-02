@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { authService } from '../services/api'
 import toast from 'react-hot-toast'
+import { initWebPush } from '../services/pushMessaging'
 
 const AuthContext = createContext(null)
 
@@ -26,6 +27,12 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false)
   }, [])
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      initWebPush().catch(() => {})
+    }
+  }, [isAuthenticated])
 
   const login = useCallback(async (email, password) => {
     try {

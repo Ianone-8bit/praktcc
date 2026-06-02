@@ -26,7 +26,15 @@ class NotificationService {
     try {
       final name = DateTime.now().timeZoneName;
       tz.setLocalLocation(tz.getLocation(name));
-    } catch (_) {}
+    } catch (_) {
+      // Fallback for common abbreviations and offset-based zones.
+      final fallback = _fallbackTimeZone();
+      if (fallback != null) {
+        try {
+          tz.setLocalLocation(tz.getLocation(fallback));
+        } catch (_) {}
+      }
+    }
 
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidSettings);
@@ -74,6 +82,21 @@ class NotificationService {
     if (payload != null && payload.isNotEmpty && onNotificationTapped != null) {
       onNotificationTapped!(payload);
     }
+  }
+
+  static String? _fallbackTimeZone() {
+    final name = DateTime.now().timeZoneName.toUpperCase();
+    if (name == 'WIB') return 'Asia/Jakarta';
+    if (name == 'WITA') return 'Asia/Makassar';
+    if (name == 'WIT') return 'Asia/Jayapura';
+
+    final offset = DateTime.now().timeZoneOffset;
+    final hours = offset.inHours;
+    if (hours == 0) return 'Etc/UTC';
+
+    final sign = hours > 0 ? '-' : '+'; // Etc/GMT sign is inverted
+    final absHours = hours.abs();
+    return 'Etc/GMT$sign$absHours';
   }
 
   static Future<void> showNotification({

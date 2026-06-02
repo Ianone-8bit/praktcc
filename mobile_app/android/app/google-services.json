@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1084640948044",
+    "project_id": "projecttcc-e3405",
+    "storage_bucket": "projecttcc-e3405.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084640948044:android:ab5629797f1090434aa9e9",
+        "android_client_info": {
+          "package_name": "com.obatlansia.obat_lansia_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdpgTYhl_w9aLHCfsAZDXBZjUxpJ2eDpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
